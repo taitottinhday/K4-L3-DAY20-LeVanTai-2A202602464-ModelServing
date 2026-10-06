@@ -23,7 +23,9 @@ Write-Host "==> Python $ver"
 if (-not (Test-Path '.venv')) { python -m venv .venv }
 & .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip wheel | Out-Null
-pip install -r requirements.txt
+# Use the interpreter that owns the virtualenv; a bare `pip` can resolve to
+# Anaconda/system Python when PowerShell has a stale command lookup entry.
+python -m pip install -r requirements.txt
 
 python .\labs\00-setup\setup.py
 

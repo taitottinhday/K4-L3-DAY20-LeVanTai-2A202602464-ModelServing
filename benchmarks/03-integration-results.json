@@ -1,0 +1,104 @@
+{
+  "backend": "keyword overlap",
+  "mean_ms": {
+    "embed": 0.0,
+    "retrieve": 0.2,
+    "llm": 9610.8,
+    "total": 9611.1
+  },
+  "results": [
+    {
+      "query": "Why is goodput more useful than raw throughput?",
+      "answer": "Based on the provided context, **Goodput is more useful than raw throughput** because it explicitly addresses the issue of **memory saturation**.\n\nHere is the breakdown based on the text:\n\n1.  **The Limitation of Raw Throughput**: The context states, \"Throughput at saturation ignores SLOs.\" This means that if a system hits its maximum capacity (saturation), the raw throughput metric will stop increasing.\n2.  **The Solution of Goodput**: Goodput is designed to \"count only the requests per second that met the TTFT and TPOT targets.\" By focusing on requests that *actually* meet the specific performance targets (TTFT and TPOT), Goodput provides a more accurate and useful metric for SLOs (Service Level Objectives) when the system is operating at its limits.\n\nIn short, Goodput is useful because it **measures performance only when the system is meeting its targets**, whereas raw throughput becomes irrelevant once the system hits saturation",
+      "contexts": [
+        {
+          "id": "goodput",
+          "score": 1.0
+        },
+        {
+          "id": "paged",
+          "score": 0.0
+        },
+        {
+          "id": "radix",
+          "score": 0.0
+        }
+      ],
+      "embed_backend": "keyword overlap",
+      "timings_ms": {
+        "embed": 0.0,
+        "retrieve": 0.4,
+        "llm": 12768.4,
+        "total": 12768.8
+      },
+      "server_timings": {
+        "prompt_n": 151,
+        "prompt_ms": 1313.159,
+        "predicted_n": 200,
+        "predicted_ms": 8787.691
+      }
+    },
+    {
+      "query": "What problem does PagedAttention actually solve?",
+      "answer": "PagedAttention solves the problem of **internal fragmentation in GPU memory** caused by storing key-value pairs (KV cache) in non-contiguous pages.\n\nBy storing these pages in non-contiguous memory regions, the model avoids the wasted space that would otherwise be consumed by internal fragmentation, thereby optimizing the use of GPU memory.",
+      "contexts": [
+        {
+          "id": "paged",
+          "score": 1.0
+        },
+        {
+          "id": "radix",
+          "score": 0.0
+        },
+        {
+          "id": "disagg",
+          "score": 0.0
+        }
+      ],
+      "embed_backend": "keyword overlap",
+      "timings_ms": {
+        "embed": 0.0,
+        "retrieve": 0.1,
+        "llm": 6128.6,
+        "total": 6128.7
+      },
+      "server_timings": {
+        "prompt_n": 114,
+        "prompt_ms": 1005.08,
+        "predicted_n": 66,
+        "predicted_ms": 2960.456
+      }
+    },
+    {
+      "query": "When does splitting prefill and decode help?",
+      "answer": "Splitting prefill and decode helps when **prefill is compute-bound and decode is memory-bound**.\n\nThis is because the context explicitly states that prefill is compute-bound and decode is memory-bandwidth-bound. By splitting them, the system can utilize different processing paths for each phase:\n1.  **Prefill**: Can be processed efficiently using compute-bound resources (e.g., GPU or specialized hardware).\n2.  **Decode**: Can be processed efficiently using memory-bandwidth-bound resources (e.g., RAM or specialized decoders).\n\nThis separation allows the system to avoid the inefficiencies of trying to run both operations simultaneously on the same hardware, ensuring that the compute-intensive part is done fast and the memory-intensive part is done fast.",
+      "contexts": [
+        {
+          "id": "disagg",
+          "score": 2.0
+        },
+        {
+          "id": "radix",
+          "score": 1.0
+        },
+        {
+          "id": "batching",
+          "score": 1.0
+        }
+      ],
+      "embed_backend": "keyword overlap",
+      "timings_ms": {
+        "embed": 0.0,
+        "retrieve": 0.1,
+        "llm": 9935.5,
+        "total": 9935.7
+      },
+      "server_timings": {
+        "prompt_n": 113,
+        "prompt_ms": 954.821,
+        "predicted_n": 151,
+        "predicted_ms": 6822.785
+      }
+    }
+  ]
+}

@@ -76,6 +76,27 @@ def detect_cpu() -> dict:
                 info["cores_physical"] = int(data.get("NumberOfCores") or 0) or None
             except (ValueError, KeyError):
                 pass
+        # Some managed Windows environments deny CIM/WMI queries. Use the
+        # registry for the CPU label and psutil (when already available) for
+        # topology; setup installs psutil transitively via locust.
+        if not info.get("model") or info.get("model") == "unknown":
+            try:
+                import winreg
+
+                with winreg.OpenKey(
+                    winreg.HKEY_LOCAL_MACHINE,
+                    r"HARDWARE\DESCRIPTION\System\CentralProcessor\0",
+                ) as key:
+                    info["model"] = str(winreg.QueryValueEx(key, "ProcessorNameString")[0]).strip()
+            except (OSError, ImportError):
+                pass
+        if not info.get("cores_physical"):
+            try:
+                import psutil
+
+                info["cores_physical"] = psutil.cpu_count(logical=False) or None
+            except ImportError:
+                pass
     info.setdefault("model", "unknown")
     if not info.get("cores_physical"):
         info["cores_physical"] = info["cores_logical"]
@@ -100,9 +121,16 @@ def detect_ram_gb() -> float:
              "(Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory"],
             timeout=20,
         )
-        digits = "".join(c for c in out if c.isdigit())
-        if digits:
-            return round(int(digits) / 1024**3, 1)
+        for line in out.splitlines():
+            value = line.strip().replace(",", "")
+            if value.isdigit():
+                return round(int(value) / 1024**3, 1)
+        try:
+            import psutil
+
+            return round(psutil.virtual_memory().total / 1024**3, 1)
+        except ImportError:
+            pass
     return 0.0
 
 
